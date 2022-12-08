@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Terminal, { TerminalOutput } from "react-terminal-ui";
+import Terminal, { ColorMode, TerminalOutput } from "react-terminal-ui";
 import { GLOBAL_CONFIG } from "../../Constants/api.constants";
 import { SocketUtil } from "../../Utils/socket.utils";
 
@@ -10,7 +10,7 @@ const MainPageModule = () => {
     useEffect(() => {
         SocketUtil.connect(GLOBAL_CONFIG.SOCKET_URL, () => {
             SocketUtil.listen("log", (data) => {
-                console.log("log data", data);
+                console.log("log data:", data);
                 setLog((prev) => [...prev, data]);
             });
         });
@@ -20,7 +20,8 @@ const MainPageModule = () => {
         };
     }, []);
 
-    const handleConnect = () => {
+    const handleConnect = (e: any) => {
+        e.preventDefault();
         if (!room) return;
         SocketUtil.emit("join_room", { room });
     };
@@ -36,15 +37,15 @@ const MainPageModule = () => {
                     margin: "50px auto",
                 }}
             >
-                <div>
+                <form onSubmit={handleConnect}>
                     <input
                         type="text"
                         placeholder="Join Room"
                         value={room || ""}
                         onChange={(e) => setRoom(e.target.value)}
                     />
-                    <button onClick={handleConnect}>Join Room</button>
-                </div>
+                    <button>Join Room</button>
+                </form>
 
                 <Terminal
                     name="React Terminal Usage Example"

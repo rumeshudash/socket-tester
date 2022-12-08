@@ -12,8 +12,9 @@ export class SocketUtil {
             callback();
             console.log(`connected to socket ${endpoint}`);
         });
-        socket.on("disconnect", () => {
+        socket.on("disconnect", (reason) => {
             socket = null;
+            console.log("disconnected: ", reason);
         });
     }
 
